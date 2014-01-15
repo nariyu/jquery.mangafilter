@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<title>MangaFilter</title>
+	<script src="js/base64.js"></script>
+	<script src="js/megapix-image.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="../src/jquery.mangafilter.js"></script>
+	<script>
+	$(function() {
+		$('.beforeafter img').remove();
+		$('input[type="file"]').on('change', function(event) {
+			var selectedFile = event.originalEvent.target.files[0];
+			$target = $(this);
+
+			var reader = new FileReader();
+			reader.onload = function(event) {
+				createMangaImage(event.target.result);
+			};
+			reader.readAsDataURL(selectedFile);
+		});
+		$('img')
+			.css({'max-width': '100px', 'max-height': '100px'})
+			.on('click', function() {
+				createMangaImage($(this).attr('src'));
+			});
+
+		function createMangaImage(src) {
+			$('.beforeafter').css({'line-height': '320px', 'background': '#EEE'}).text('processing...');
+			$('html,body').animate({'scrollTop': 0}, function() {
+				var img = $('<img />')
+					.attr('src', src)
+					.css({'width': '300px', 'height': 'auto'})
+					.mangafilter({'maxWidth': 600, 'maxHeight': 600, 'complete': function() {
+						$('.beforeafter').css({'line-height': 1, 'background': 'transparent'}).empty().append(img);
+					}});
+			});
+		}
+	});
+	</script>
+	<link href="http://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+	body {
+		background-color: #FFF;
+		font-size: 13px;
+		text-align: center;
+		font-family: "Gloria Hallelujah", cursive;
+	}
+	img {
+		margin: 0 5px 0 0;
+	}
+	.beforeafter {
+		margin: 1em auto;
+		max-width: 320px;
+		min-height: 320px;
+		line-height: 320px;
+	}
+	.copyright {
+		font-family: sans-serif;
+		font-size: 12px;
+	}
+	</style>
+</head>
+<body>
+	<h1>MangaFilter</h1>
+	<p><input type="file" /></p>
+	<p class="beforeafter"></p>
+	<p>
+		<img src="images/image5.jpg" />
+	</p>
+	<p class="copyright">Code by <a href="http://github.com/nariyu/jquery.mangafilter">@nariyu</a></p>
+</body>
+</html>
